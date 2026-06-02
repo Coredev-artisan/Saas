@@ -11,56 +11,56 @@ export function ResultsDashboard({ simulation, countryId }: { simulation: Calcul
     <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-700">
       <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Financial Overview</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {/* Stripe-Style KPI Card 1 */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4">
-            <span className="bg-teal-50 text-teal-700 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">Monthly</span>
+        <div className="bg-white p-8 rounded-[32px] border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-5">
+            <span className="bg-teal-50 text-teal-700 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">Monthly</span>
           </div>
-          <div className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center mb-6 group-hover:bg-teal-50 group-hover:text-teal-600 transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-teal-50 group-hover:text-teal-600 transition-colors">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           </div>
           <div className="text-sm font-semibold text-slate-500 mb-1">Net Income</div>
-          <div className="text-3xl font-black text-slate-900 tabular-nums tracking-tight">{formatCurrency(simulation.netMonthlyTakeHome, currency)}</div>
+          <div className="text-4xl font-black text-slate-900 tabular-nums tracking-tight mb-2">{formatCurrency(simulation.netMonthlyTakeHome, currency)}</div>
           <div className="text-xs font-medium text-slate-400 mt-4 border-t border-slate-100 pt-4">After taxes and contributions</div>
         </div>
 
         {/* Stripe-Style KPI Card 2 */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4">
-            <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">Annual</span>
+        <div className="bg-white p-8 rounded-[32px] border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-5">
+            <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">Annual</span>
           </div>
-          <div className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center mb-6 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z"></path></svg>
+          <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z"></path></svg>
           </div>
           <div className="text-sm font-semibold text-slate-500 mb-1">Tax Burden</div>
-          <div className="text-3xl font-black text-slate-900 tabular-nums tracking-tight">{formatCurrency(simulation.grossSalary - simulation.netYearlyTakeHome, currency)}</div>
-          <div className="text-xs font-medium text-slate-400 mt-4 border-t border-slate-100 pt-4">{formatPercentage(((simulation.grossSalary - simulation.netYearlyTakeHome) / simulation.grossSalary) * 100)} effective rate</div>
+          <div className="text-4xl font-black text-slate-900 tabular-nums tracking-tight mb-2">{formatCurrency(simulation.grossSalary - simulation.netYearlyTakeHome, currency)}</div>
+          <div className="text-xs font-medium text-slate-400 mt-4 border-t border-slate-100 pt-4">{formatPercentage((simulation.grossSalary - simulation.netYearlyTakeHome) / simulation.grossSalary)} effective rate</div>
         </div>
 
         {/* Stripe-Style KPI Card 3 */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4">
-            <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">Rate</span>
+        <div className="bg-white p-8 rounded-[32px] border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-5">
+            <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">Rate</span>
           </div>
-          <div className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+          <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
           </div>
           <div className="text-sm font-semibold text-slate-500 mb-1">Savings Rate</div>
-          <div className="text-3xl font-black text-emerald-600 tabular-nums tracking-tight">{((simulation.monthlySavings || 0) > 0 ? ((simulation.monthlySavings || 0) / simulation.netMonthlyTakeHome) * 100 : 0).toFixed(1)}%</div>
+          <div className="text-4xl font-black text-emerald-600 tabular-nums tracking-tight mb-2">{formatPercentage((simulation.monthlySavings || 0) > 0 ? (simulation.monthlySavings || 0) / simulation.netMonthlyTakeHome : 0)}</div>
           <div className="text-xs font-medium text-slate-400 mt-4 border-t border-slate-100 pt-4">Of net monthly income</div>
         </div>
 
         {/* Stripe-Style KPI Card 4 */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4">
-            <span className="bg-blue-50 text-blue-700 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">Months</span>
+        <div className="bg-white p-8 rounded-[32px] border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-5">
+            <span className="bg-blue-50 text-blue-700 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">Months</span>
           </div>
-          <div className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+          <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
           </div>
           <div className="text-sm font-semibold text-slate-500 mb-1">Emergency Runway</div>
-          <div className="text-3xl font-black text-slate-900 tabular-nums tracking-tight">{Math.max(0, simulation.emergencyRunway || 0).toFixed(1)} <span className="text-lg text-slate-400">mo</span></div>
+          <div className="text-4xl font-black text-slate-900 tabular-nums tracking-tight mb-2">{Math.max(0, simulation.emergencyRunway || 0).toFixed(1)} <span className="text-lg text-slate-400">mo</span></div>
           <div className="text-xs font-medium text-slate-400 mt-4 border-t border-slate-100 pt-4">Based on living costs</div>
         </div>
       </div>
@@ -133,56 +133,77 @@ export function IncomeDistribution({ simulation, countryId }: { simulation: Calc
     <div className="bg-white p-8 rounded-[32px] border border-slate-200 shadow-sm h-full">
       <h3 className="text-xl font-bold text-slate-900 mb-8">Income Waterfall</h3>
       
-      <div className="space-y-6 relative before:content-[''] before:absolute before:left-3 before:top-4 before:bottom-4 before:w-[2px] before:bg-slate-100">
+      <div className="relative">
+        {/* Background Vertical Line */}
+        <div className="absolute left-[11px] top-4 bottom-8 w-[2px] bg-slate-100 z-0"></div>
         
-        {/* Gross Income Node */}
-        <div className="relative pl-10">
-          <div className="absolute left-[9px] top-2.5 w-2 h-2 rounded-full bg-slate-300 ring-4 ring-white"></div>
-          <div className="flex justify-between items-baseline mb-2">
-            <span className="text-sm font-bold text-slate-700">Gross Salary</span>
-            <span className="text-sm font-black text-slate-900 tabular-nums">{formatCurrency(gross, currency)}</span>
+        <div className="space-y-0 relative z-10">
+          
+          {/* Gross Income Node */}
+          <div className="flex items-start gap-5">
+            <div className="mt-1 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-[0_0_0_4px_white] shrink-0 z-10">
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
+            </div>
+            <div className="flex-1 min-w-0 pb-8">
+              <div className="flex justify-between items-baseline mb-2">
+                <span className="text-sm font-bold text-slate-700 truncate">Gross Salary</span>
+                <span className="text-sm font-black text-slate-900 tabular-nums shrink-0 ml-2">{formatCurrency(gross, currency)}</span>
+              </div>
+              <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full bg-slate-800 rounded-full transition-all duration-1000" style={{ width: '100%' }}></div>
+              </div>
+            </div>
           </div>
-          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
-            <div className="h-full bg-slate-800 rounded-full transition-all duration-1000" style={{ width: '100%' }}></div>
-          </div>
-        </div>
 
-        {/* Taxes Node */}
-        <div className="relative pl-10">
-          <div className="absolute left-[9px] top-2.5 w-2 h-2 rounded-full bg-indigo-500 ring-4 ring-white"></div>
-          <div className="flex justify-between items-baseline mb-2">
-            <span className="text-sm font-bold text-slate-700">Taxes & Contributions</span>
-            <span className="text-sm font-black text-indigo-600 tabular-nums">-{formatCurrency(tax, currency)}</span>
+          {/* Taxes Node */}
+          <div className="flex items-start gap-5">
+            <div className="mt-1 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-[0_0_0_4px_white] shrink-0 z-10">
+              <div className="w-2.5 h-2.5 rounded-full bg-indigo-500"></div>
+            </div>
+            <div className="flex-1 min-w-0 pb-8">
+              <div className="flex justify-between items-baseline mb-2">
+                <span className="text-sm font-bold text-slate-700 truncate">Taxes & Contributions</span>
+                <span className="text-sm font-black text-indigo-600 tabular-nums shrink-0 ml-2">-{formatCurrency(tax, currency)}</span>
+              </div>
+              <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full bg-indigo-500 rounded-full transition-all duration-1000 delay-100" style={{ width: getWidth(tax) }}></div>
+              </div>
+            </div>
           </div>
-          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
-            <div className="h-full bg-indigo-500 rounded-full transition-all duration-1000 delay-100" style={{ width: getWidth(tax) }}></div>
-          </div>
-        </div>
 
-        {/* Living Costs Node */}
-        <div className="relative pl-10">
-          <div className="absolute left-[9px] top-2.5 w-2 h-2 rounded-full bg-rose-400 ring-4 ring-white"></div>
-          <div className="flex justify-between items-baseline mb-2">
-            <span className="text-sm font-bold text-slate-700">Annual Living Costs</span>
-            <span className="text-sm font-black text-rose-500 tabular-nums">-{formatCurrency(living, currency)}</span>
+          {/* Living Costs Node */}
+          <div className="flex items-start gap-5">
+            <div className="mt-1 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-[0_0_0_4px_white] shrink-0 z-10">
+              <div className="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+            </div>
+            <div className="flex-1 min-w-0 pb-8">
+              <div className="flex justify-between items-baseline mb-2">
+                <span className="text-sm font-bold text-slate-700 truncate">Annual Living Costs</span>
+                <span className="text-sm font-black text-rose-500 tabular-nums shrink-0 ml-2">-{formatCurrency(living, currency)}</span>
+              </div>
+              <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full bg-rose-400 rounded-full transition-all duration-1000 delay-200" style={{ width: getWidth(living) }}></div>
+              </div>
+            </div>
           </div>
-          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
-            <div className="h-full bg-rose-400 rounded-full transition-all duration-1000 delay-200" style={{ width: getWidth(living) }}></div>
-          </div>
-        </div>
 
-        {/* Savings Node */}
-        <div className="relative pl-10">
-          <div className="absolute left-[7px] top-1.5 w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-white border-2 border-emerald-100"></div>
-          <div className="flex justify-between items-baseline mb-2">
-            <span className="text-sm font-bold text-slate-700">Net Annual Savings</span>
-            <span className="text-sm font-black text-emerald-600 tabular-nums">={formatCurrency(savings, currency)}</span>
+          {/* Savings Node */}
+          <div className="flex items-start gap-5">
+            <div className="mt-1 w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-[0_0_0_4px_white] shrink-0 z-10">
+              <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-2 ring-emerald-100"></div>
+            </div>
+            <div className="flex-1 min-w-0 pb-2">
+              <div className="flex justify-between items-baseline mb-2">
+                <span className="text-sm font-bold text-slate-700 truncate">Net Annual Savings</span>
+                <span className="text-sm font-black text-emerald-600 tabular-nums shrink-0 ml-2">={formatCurrency(savings, currency)}</span>
+              </div>
+              <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full bg-emerald-500 rounded-full transition-all duration-1000 delay-300 shadow-[0_0_10px_rgba(16,185,129,0.5)]" style={{ width: getWidth(savings) }}></div>
+              </div>
+            </div>
           </div>
-          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
-            <div className="h-full bg-emerald-500 rounded-full transition-all duration-1000 delay-300 shadow-[0_0_10px_rgba(16,185,129,0.5)]" style={{ width: getWidth(savings) }}></div>
-          </div>
-        </div>
 
+        </div>
       </div>
     </div>
   );
@@ -201,7 +222,7 @@ export function DetailedTaxBreakdown({ simulation, countryId }: { simulation: Ca
               <div className="text-slate-900 font-bold mb-1 group-hover:text-teal-600 transition-colors">
                 {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
               </div>
-              <div className="text-sm text-slate-500 font-medium">({formatPercentage(((val as number) / simulation.grossSalary) * 100)})</div>
+              <div className="text-sm text-slate-500 font-medium mt-1 text-left">({formatPercentage((val as number) / simulation.grossSalary)})</div>
             </div>
             <div className="text-right">
               <div className="text-xl font-black text-slate-900 tabular-nums">-{formatCurrency(val as number, currency)}</div>

@@ -84,7 +84,7 @@ export default function Dashboard({ initialCountry = '', initialSalary = 80000, 
               </div>
               <span className="font-bold text-[19px] tracking-tight text-slate-900">TakeHome Pro</span>
             </div>
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-10">
               <a href="#" className="text-sm font-semibold text-slate-900 hover:text-teal-600 transition-colors">Calculator</a>
               <a href="#" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Intelligence</a>
               <a href="#" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Compare</a>
@@ -120,11 +120,11 @@ export default function Dashboard({ initialCountry = '', initialSalary = 80000, 
             {/* Premium Control Center */}
             <div className="bg-white p-8 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-200/60 space-y-8 relative">
               
-              <div className="space-y-3">
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Tax Jurisdiction</label>
+              <div className="space-y-4">
+                <label className="block text-xs font-black text-slate-500 uppercase tracking-widest pl-1">Tax Jurisdiction</label>
                 <div className="relative">
                   <select 
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-bold rounded-2xl p-4 pl-12 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all cursor-pointer text-lg appearance-none shadow-inner"
+                    className="w-full bg-slate-50/50 border-2 border-slate-200 text-slate-900 font-bold rounded-[20px] p-5 pl-14 focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 focus:bg-white outline-none transition-all cursor-pointer text-lg appearance-none shadow-sm hover:border-slate-300"
                     value={countryId} 
                     onChange={e => { setCountryId(e.target.value as any); setHasCalculated(false); }}
                   >
@@ -133,31 +133,31 @@ export default function Dashboard({ initialCountry = '', initialSalary = 80000, 
                     <option value="uk">United Kingdom</option>
                     <option value="germany">Germany</option>
                   </select>
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                   </div>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                  <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                   </div>
                 </div>
               </div>
 
               {countryId && (
                 <div className="space-y-8 animate-in slide-in-from-top-4 fade-in duration-500">
-                  <div className="space-y-3 relative">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Target City</label>
+                  <div className="space-y-4 relative">
+                    <label className="block text-xs font-black text-slate-500 uppercase tracking-widest pl-1">Target City</label>
                     <div className="relative">
                       <input 
                         type="text" 
-                        className="w-full bg-slate-50 border border-slate-200 text-slate-900 font-bold rounded-2xl p-4 pl-12 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-shadow text-lg shadow-inner placeholder-slate-400"
+                        className="w-full bg-slate-50/50 border-2 border-slate-200 text-slate-900 font-bold rounded-[20px] p-5 pl-14 focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 focus:bg-white outline-none transition-shadow text-lg shadow-sm placeholder-slate-400 hover:border-slate-300"
                         placeholder="Search city (e.g. Berlin)..."
                         value={cityQuery}
                         onFocus={() => setIsCityFocused(true)}
                         onBlur={() => setTimeout(() => setIsCityFocused(false), 200)}
                         onChange={e => { setCityQuery(e.target.value); setSelectedCityId(''); setHasCalculated(false); }}
                       />
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                        <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                      <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none">
+                        <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                       </div>
                     </div>
                     {isCityFocused && filteredCities.length > 0 && (
@@ -176,9 +176,9 @@ export default function Dashboard({ initialCountry = '', initialSalary = 80000, 
                     <div className="flex justify-between items-end">
                       <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Gross Annual Salary</label>
                     </div>
-                    <div className="relative pt-6 pb-2">
+                    <div className="relative pt-10 pb-4">
                       {/* Floating Bubble */}
-                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white font-black text-xl py-1.5 px-4 rounded-xl shadow-lg pointer-events-none tabular-nums whitespace-nowrap before:content-[''] before:absolute before:-bottom-1.5 before:left-1/2 before:-translate-x-1/2 before:border-4 before:border-transparent before:border-t-slate-900 transition-all duration-75"
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-slate-900 text-white font-black text-xl py-2 px-5 rounded-xl shadow-lg pointer-events-none tabular-nums whitespace-nowrap before:content-[''] before:absolute before:-bottom-2 before:left-1/2 before:-translate-x-1/2 before:border-[6px] before:border-transparent before:border-t-slate-900 transition-all duration-75 z-10"
                            style={{ left: `calc(${((grossSalary - 20000) / 280000) * 100}%)` }}>
                         {formatCurrency(grossSalary, countryId === 'usa' ? 'USD' : countryId === 'uk' ? 'GBP' : 'EUR')}
                       </div>
@@ -198,10 +198,10 @@ export default function Dashboard({ initialCountry = '', initialSalary = 80000, 
 
                   <button 
                     onClick={handleCalculate}
-                    className="w-full py-5 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white text-[17px] font-bold rounded-2xl shadow-[0_4px_14px_0_rgba(0,0,0,0.15)] transition-all active:scale-[0.98] flex items-center justify-center space-x-2 border border-slate-800/50"
+                    className="w-full py-6 mt-4 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white text-[19px] font-extrabold rounded-[20px] shadow-[0_8px_20px_-4px_rgba(0,0,0,0.2)] hover:shadow-[0_12px_24px_-6px_rgba(0,0,0,0.3)] transition-all active:scale-[0.98] flex items-center justify-center space-x-3 border border-slate-700/50"
                   >
                     <span>Run Financial Simulation</span>
-                    <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    <svg className="w-6 h-6 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                   </button>
                 </div>
               )}

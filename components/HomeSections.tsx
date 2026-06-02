@@ -1,306 +1,317 @@
-import React from 'react';
-import { formatCurrency, formatPercentage } from '../lib/utils/formatters';
+"use client";
+
+import React, { useState } from 'react';
 import { CalculationResult } from '../lib/tax/engine';
+import { formatCurrency, formatPercentage } from '../lib/utils/formatters';
 
-// Helper to safely get tax breakdown values
-const getTax = (simulation: CalculationResult, key: keyof typeof simulation.taxBreakdown) => {
-  return simulation.taxBreakdown[key] || 0;
-};
-
-// Section 2: Instant Results Dashboard
 export function ResultsDashboard({ simulation, countryId }: { simulation: CalculationResult, countryId: string }) {
   const currency = countryId === 'usa' ? 'USD' : countryId === 'uk' ? 'GBP' : 'EUR';
-  const totalTax = (simulation.grossSalary / (simulation.grossSalary === simulation.taxBreakdown.incomeTax ? 1 : 12)) - simulation.netMonthlyTakeHome; // rough est for display if annual
-
+  
   return (
-    <section className="py-12 border-b border-slate-100">
+    <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-700">
+      <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Financial Overview</h2>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { title: 'Net Monthly Income', val: formatCurrency(simulation.netMonthlyTakeHome, currency), icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-teal-500' },
-          { title: 'Total Annual Tax', val: formatCurrency(simulation.taxBreakdown.incomeTax + (simulation.taxBreakdown.socialSecurity || 0) + (simulation.taxBreakdown.nationalInsurance || 0) + (simulation.taxBreakdown.pension || 0) + (simulation.taxBreakdown.health || 0), currency), icon: 'M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z', color: 'text-rose-500' },
-          { title: 'Monthly Savings', val: formatCurrency(Math.max(0, simulation.monthlySavings || 0), currency), icon: 'M5 13l4 4L19 7', color: 'text-green-500' },
-          { title: 'Emergency Runway', val: `${(simulation.emergencyRunway || 0).toFixed(1)} months`, icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-indigo-500' }
-        ].map((card, i) => (
-          <div key={i} className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-            <div className={`w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center mb-4 ${card.color}`}>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={card.icon}></path></svg>
-            </div>
-            <h4 className="text-slate-500 text-sm font-medium mb-1">{card.title}</h4>
-            <div className="text-3xl font-black text-slate-900 tracking-tight tabular-nums">{card.val}</div>
+        {/* Stripe-Style KPI Card 1 */}
+        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4">
+            <span className="bg-teal-50 text-teal-700 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">Monthly</span>
           </div>
-        ))}
+          <div className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center mb-6 group-hover:bg-teal-50 group-hover:text-teal-600 transition-colors">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <div className="text-sm font-semibold text-slate-500 mb-1">Net Income</div>
+          <div className="text-3xl font-black text-slate-900 tabular-nums tracking-tight">{formatCurrency(simulation.netMonthlyTakeHome, currency)}</div>
+          <div className="text-xs font-medium text-slate-400 mt-4 border-t border-slate-100 pt-4">After taxes and contributions</div>
+        </div>
+
+        {/* Stripe-Style KPI Card 2 */}
+        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4">
+            <span className="bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">Annual</span>
+          </div>
+          <div className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center mb-6 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z"></path></svg>
+          </div>
+          <div className="text-sm font-semibold text-slate-500 mb-1">Tax Burden</div>
+          <div className="text-3xl font-black text-slate-900 tabular-nums tracking-tight">{formatCurrency(simulation.grossSalary - simulation.netYearlyTakeHome, currency)}</div>
+          <div className="text-xs font-medium text-slate-400 mt-4 border-t border-slate-100 pt-4">{formatPercentage(((simulation.grossSalary - simulation.netYearlyTakeHome) / simulation.grossSalary) * 100)} effective rate</div>
+        </div>
+
+        {/* Stripe-Style KPI Card 3 */}
+        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4">
+            <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">Rate</span>
+          </div>
+          <div className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+          </div>
+          <div className="text-sm font-semibold text-slate-500 mb-1">Savings Rate</div>
+          <div className="text-3xl font-black text-emerald-600 tabular-nums tracking-tight">{((simulation.monthlySavings || 0) > 0 ? ((simulation.monthlySavings || 0) / simulation.netMonthlyTakeHome) * 100 : 0).toFixed(1)}%</div>
+          <div className="text-xs font-medium text-slate-400 mt-4 border-t border-slate-100 pt-4">Of net monthly income</div>
+        </div>
+
+        {/* Stripe-Style KPI Card 4 */}
+        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4">
+            <span className="bg-blue-50 text-blue-700 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">Months</span>
+          </div>
+          <div className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+          </div>
+          <div className="text-sm font-semibold text-slate-500 mb-1">Emergency Runway</div>
+          <div className="text-3xl font-black text-slate-900 tabular-nums tracking-tight">{Math.max(0, simulation.emergencyRunway || 0).toFixed(1)} <span className="text-lg text-slate-400">mo</span></div>
+          <div className="text-xs font-medium text-slate-400 mt-4 border-t border-slate-100 pt-4">Based on living costs</div>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
 
-// Section 3: Financial Health Score
 export function HealthScore({ simulation }: { simulation: CalculationResult }) {
   const savingsRate = simulation.savingsPercentage || 0;
+  const runway = simulation.emergencyRunway || 0;
+  const savingsScore = Math.min(savingsRate / 50 * 100, 100) * 0.5;
+  const runwayScore = Math.min(runway / 12 * 100, 100) * 0.5;
+  const score = Math.round(savingsScore + runwayScore);
+  const isHealthy = score >= 70;
+  const colorClass = score >= 80 ? 'text-emerald-500' : score >= 60 ? 'text-blue-500' : score >= 40 ? 'text-amber-500' : 'text-rose-500';
+  const strokeClass = score >= 80 ? 'stroke-emerald-500' : score >= 60 ? 'stroke-blue-500' : score >= 40 ? 'stroke-amber-500' : 'stroke-rose-500';
   
-  // Basic heuristic for score
-  let score = 50;
-  if (savingsRate > 20) score += 20;
-  if (savingsRate > 40) score += 15;
-  if (savingsRate < 5) score -= 20;
-  if ((simulation.emergencyRunway || 0) > 6) score += 15;
-  
-  score = Math.min(100, Math.max(0, score));
-  
-  const rating = score >= 80 ? 'Excellent' : score >= 60 ? 'Good' : score >= 40 ? 'Fair' : 'Poor';
-  const color = score >= 80 ? 'text-green-500 stroke-green-500' : score >= 60 ? 'text-teal-500 stroke-teal-500' : score >= 40 ? 'text-amber-500 stroke-amber-500' : 'text-rose-500 stroke-rose-500';
+  const circumference = 2 * Math.PI * 60; // r=60
+  const dashoffset = circumference - (score / 100) * circumference;
 
   return (
-    <section className="py-12 border-b border-slate-100">
-      <div className="flex flex-col md:flex-row gap-8 items-center bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-        <div className="relative w-48 h-48 flex-shrink-0">
-          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="40" className="stroke-slate-100" strokeWidth="8" fill="none" />
-            <circle cx="50" cy="50" r="40" className={color} strokeWidth="8" fill="none" strokeDasharray={`${score * 2.51} 251`} strokeLinecap="round" />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-4xl font-black text-slate-900">{score}</span>
-            <span className={`text-sm font-bold uppercase tracking-widest ${color.split(' ')[0]}`}>{rating}</span>
-          </div>
-        </div>
-        <div>
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">Financial Health Score</h2>
-          <p className="text-slate-500 text-lg leading-relaxed mb-4">
-            Your financial health score is based on your savings rate ({savingsRate.toFixed(1)}%), tax burden, cost of living, and emergency runway.
-          </p>
-          <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-            <div className="flex items-start">
-              <svg className="w-5 h-5 text-teal-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              <p className="text-slate-700 font-medium">
-                Your savings rate is stronger than {Math.min(99, Math.floor(score * 0.9))}% of professionals in similar locations.
-              </p>
-            </div>
-          </div>
+    <div className="bg-white p-8 rounded-[32px] border border-slate-200 shadow-sm flex flex-col items-center justify-center text-center h-full">
+      <h3 className="text-xl font-bold text-slate-900 mb-8">Financial Health Score</h3>
+      
+      {/* Large Circular SVG */}
+      <div className="relative w-48 h-48 mb-6">
+        <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 140 140">
+          {/* Background Track */}
+          <circle cx="70" cy="70" r="60" className="stroke-slate-100 fill-none" strokeWidth="12" />
+          {/* Animated Progress */}
+          <circle 
+            cx="70" cy="70" r="60" 
+            className={`fill-none transition-all duration-1000 ease-out ${strokeClass}`} 
+            strokeWidth="12" 
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={dashoffset}
+          />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className={`text-5xl font-black tabular-nums tracking-tighter ${colorClass}`}>{score}</span>
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">/ 100</span>
         </div>
       </div>
-    </section>
+
+      <div className="max-w-xs mx-auto">
+        <h4 className="text-slate-900 font-bold mb-2">{isHealthy ? 'Strong Financial Position' : 'Action Required'}</h4>
+        <p className="text-sm text-slate-500 leading-relaxed">
+          {isHealthy 
+            ? "Your income strongly covers living expenses in this city, leaving ample room for savings and investments." 
+            : "Living costs consume a high percentage of your net income. Consider a frugal lifestyle or relocating."}
+        </p>
+      </div>
+    </div>
   );
 }
 
-// Section 4: Income Distribution Visualization
 export function IncomeDistribution({ simulation, countryId }: { simulation: CalculationResult, countryId: string }) {
   const currency = countryId === 'usa' ? 'USD' : countryId === 'uk' ? 'GBP' : 'EUR';
-  const totalGrossMonthly = simulation.grossSalary / 12;
-  const incomeTaxMonthly = simulation.taxBreakdown.incomeTax / 12;
-  const secondaryTaxYearly = 
-    (simulation.taxBreakdown.socialSecurity || 0) + 
-    (simulation.taxBreakdown.nationalInsurance || 0) + 
-    (simulation.taxBreakdown.pension || 0) + 
-    (simulation.taxBreakdown.health || 0) +
-    (simulation.taxBreakdown.unemployment || 0) +
-    (simulation.taxBreakdown.longTermCare || 0) +
-    (simulation.taxBreakdown.medicare || 0) + 
-    (simulation.taxBreakdown.additionalMedicare || 0) +
-    (simulation.taxBreakdown.solidaritySurcharge || 0);
-  const secondaryTaxMonthly = secondaryTaxYearly / 12;
-  const livingCost = simulation.itemizedMonthlyLivingCosts || 0;
-  const savings = Math.max(0, simulation.monthlySavings || 0);
+  const gross = simulation.grossSalary;
+  const tax = simulation.grossSalary - simulation.netYearlyTakeHome;
+  const living = (simulation.itemizedMonthlyLivingCosts || 0) * 12;
+  const savings = Math.max(0, gross - tax - living);
 
-  const formatPct = (val: number) => ((val / totalGrossMonthly) * 100).toFixed(1) + '%';
+  // Calculate percentages for SVG widths (max 100%)
+  const maxVal = gross;
+  const getWidth = (val: number) => `${Math.max(5, (val / maxVal) * 100)}%`;
 
   return (
-    <section className="py-12 border-b border-slate-100">
-      <h2 className="text-3xl font-bold text-slate-900 mb-8">Income Distribution</h2>
-      <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-        <div className="space-y-4">
-          <div className="flex items-center">
-            <div className="w-48 text-sm font-medium text-slate-500">Gross Salary</div>
-            <div className="flex-1 h-8 bg-slate-900 rounded-lg relative overflow-hidden group">
-               <div className="absolute inset-0 flex items-center px-4 text-white text-xs font-bold">{formatCurrency(totalGrossMonthly, currency)} (100%)</div>
-            </div>
+    <div className="bg-white p-8 rounded-[32px] border border-slate-200 shadow-sm h-full">
+      <h3 className="text-xl font-bold text-slate-900 mb-8">Income Waterfall</h3>
+      
+      <div className="space-y-6 relative before:content-[''] before:absolute before:left-3 before:top-4 before:bottom-4 before:w-[2px] before:bg-slate-100">
+        
+        {/* Gross Income Node */}
+        <div className="relative pl-10">
+          <div className="absolute left-[9px] top-2.5 w-2 h-2 rounded-full bg-slate-300 ring-4 ring-white"></div>
+          <div className="flex justify-between items-baseline mb-2">
+            <span className="text-sm font-bold text-slate-700">Gross Salary</span>
+            <span className="text-sm font-black text-slate-900 tabular-nums">{formatCurrency(gross, currency)}</span>
           </div>
-          <div className="flex items-center">
-            <div className="w-48 text-sm font-medium text-slate-500">Income Tax</div>
-            <div className="flex-1 flex">
-              <div style={{ width: formatPct(incomeTaxMonthly) }} className="h-8 bg-slate-400 rounded-lg relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center px-4 text-white text-xs font-bold">{formatPct(incomeTaxMonthly)}</div>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center">
-            <div className="w-48 text-sm font-medium text-slate-500">Social Contributions</div>
-            <div className="flex-1 flex">
-               {/* offset spacer */}
-               <div style={{ width: formatPct(incomeTaxMonthly) }}></div>
-              <div style={{ width: formatPct(secondaryTaxMonthly) }} className="h-8 bg-slate-500 rounded-lg relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center px-4 text-white text-xs font-bold">{formatPct(secondaryTaxMonthly)}</div>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center">
-            <div className="w-48 text-sm font-medium text-slate-500">Living Costs</div>
-            <div className="flex-1 flex">
-               <div style={{ width: formatPct(incomeTaxMonthly + secondaryTaxMonthly) }}></div>
-              <div style={{ width: formatPct(livingCost) }} className="h-8 bg-slate-600 rounded-lg relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center px-4 text-white text-xs font-bold">{formatPct(livingCost)}</div>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center">
-            <div className="w-48 text-sm font-medium text-slate-500">Net Savings</div>
-            <div className="flex-1 flex">
-               <div style={{ width: formatPct(incomeTaxMonthly + secondaryTaxMonthly + livingCost) }}></div>
-              <div style={{ width: formatPct(savings) }} className="h-8 bg-teal-500 rounded-lg relative overflow-hidden shadow-[0_0_15px_rgba(20,184,166,0.3)]">
-                <div className="absolute inset-0 flex items-center px-4 text-white text-xs font-bold">{formatPct(savings)}</div>
-              </div>
-            </div>
+          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-full bg-slate-800 rounded-full transition-all duration-1000" style={{ width: '100%' }}></div>
           </div>
         </div>
+
+        {/* Taxes Node */}
+        <div className="relative pl-10">
+          <div className="absolute left-[9px] top-2.5 w-2 h-2 rounded-full bg-indigo-500 ring-4 ring-white"></div>
+          <div className="flex justify-between items-baseline mb-2">
+            <span className="text-sm font-bold text-slate-700">Taxes & Contributions</span>
+            <span className="text-sm font-black text-indigo-600 tabular-nums">-{formatCurrency(tax, currency)}</span>
+          </div>
+          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-full bg-indigo-500 rounded-full transition-all duration-1000 delay-100" style={{ width: getWidth(tax) }}></div>
+          </div>
+        </div>
+
+        {/* Living Costs Node */}
+        <div className="relative pl-10">
+          <div className="absolute left-[9px] top-2.5 w-2 h-2 rounded-full bg-rose-400 ring-4 ring-white"></div>
+          <div className="flex justify-between items-baseline mb-2">
+            <span className="text-sm font-bold text-slate-700">Annual Living Costs</span>
+            <span className="text-sm font-black text-rose-500 tabular-nums">-{formatCurrency(living, currency)}</span>
+          </div>
+          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-full bg-rose-400 rounded-full transition-all duration-1000 delay-200" style={{ width: getWidth(living) }}></div>
+          </div>
+        </div>
+
+        {/* Savings Node */}
+        <div className="relative pl-10">
+          <div className="absolute left-[7px] top-1.5 w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-white border-2 border-emerald-100"></div>
+          <div className="flex justify-between items-baseline mb-2">
+            <span className="text-sm font-bold text-slate-700">Net Annual Savings</span>
+            <span className="text-sm font-black text-emerald-600 tabular-nums">={formatCurrency(savings, currency)}</span>
+          </div>
+          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-full bg-emerald-500 rounded-full transition-all duration-1000 delay-300 shadow-[0_0_10px_rgba(16,185,129,0.5)]" style={{ width: getWidth(savings) }}></div>
+          </div>
+        </div>
+
       </div>
-    </section>
+    </div>
   );
 }
 
-// Section 5: Detailed Tax Breakdown
 export function DetailedTaxBreakdown({ simulation, countryId }: { simulation: CalculationResult, countryId: string }) {
   const currency = countryId === 'usa' ? 'USD' : countryId === 'uk' ? 'GBP' : 'EUR';
-  const totalTax = simulation.taxBreakdown.incomeTax + 
-    (simulation.taxBreakdown.socialSecurity || 0) + 
-    (simulation.taxBreakdown.medicare || 0) + 
-    (simulation.taxBreakdown.additionalMedicare || 0) +
-    (simulation.taxBreakdown.nationalInsurance || 0) +
-    (simulation.taxBreakdown.pension || 0) +
-    (simulation.taxBreakdown.health || 0) +
-    (simulation.taxBreakdown.unemployment || 0) +
-    (simulation.taxBreakdown.longTermCare || 0) +
-    (simulation.taxBreakdown.solidaritySurcharge || 0);
   
-  const effectiveRate = (totalTax / simulation.grossSalary) * 100;
-
-  const taxes = [
-    { name: 'Federal / National Income Tax', val: simulation.taxBreakdown.incomeTax, desc: 'Progressive income tax levied on taxable earnings.' },
-    { name: 'Social Security', val: simulation.taxBreakdown.socialSecurity, desc: 'Funds retirement and disability benefits.' },
-    { name: 'Medicare (Incl. Additional)', val: (simulation.taxBreakdown.medicare || 0) + (simulation.taxBreakdown.additionalMedicare || 0), desc: 'Funds healthcare for seniors.' },
-    { name: 'National Insurance', val: simulation.taxBreakdown.nationalInsurance, desc: 'Primary UK social contribution.' },
-    { name: 'Statutory Pension', val: simulation.taxBreakdown.pension, desc: 'German public retirement system contribution.' },
-    { name: 'Statutory Health Insurance', val: simulation.taxBreakdown.health, desc: 'Public health coverage contribution.' },
-    { name: 'Unemployment Insurance', val: simulation.taxBreakdown.unemployment, desc: 'Provides unemployment benefits.' },
-    { name: 'Long-term Care', val: simulation.taxBreakdown.longTermCare, desc: 'Care insurance contribution.' },
-    { name: 'Solidarity Surcharge', val: simulation.taxBreakdown.solidaritySurcharge, desc: 'Surcharge for reunification costs.' },
-  ].filter(t => t.val && t.val > 0);
-
   return (
-    <section className="py-12 border-b border-slate-100">
-      <div className="flex justify-between items-end mb-8">
-        <h2 className="text-3xl font-bold text-slate-900">Detailed Tax Breakdown</h2>
-        <div className="text-right">
-          <span className="text-sm font-medium text-slate-500">Effective Tax Rate</span>
-          <div className="text-2xl font-black text-slate-900 tabular-nums">{effectiveRate.toFixed(1)}%</div>
-        </div>
-      </div>
-      <div className="space-y-3">
-        {taxes.map((t, i) => (
-          <details key={i} className="group bg-white rounded-3xl border border-slate-100 shadow-sm [&_summary::-webkit-details-marker]:hidden">
-            <summary className="flex justify-between items-center p-6 cursor-pointer hover:bg-slate-50 transition-colors rounded-3xl">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-open:bg-teal-50 group-open:text-teal-500 transition-colors">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
-                <span className="font-bold text-slate-900">{t.name}</span>
+    <div className="space-y-6">
+      <h2 className="text-2xl font-extrabold tracking-tight text-slate-900">Tax Breakdown</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {Object.entries(simulation.taxBreakdown).filter(([_, val]) => val && (val as number) > 0).map(([key, val], idx) => (
+          <div key={idx} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between group hover:border-slate-300 transition-colors">
+            <div>
+              <div className="text-slate-900 font-bold mb-1 group-hover:text-teal-600 transition-colors">
+                {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
               </div>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm font-medium text-slate-500">{((t.val! / simulation.grossSalary) * 100).toFixed(1)}%</span>
-                <span className="font-black text-slate-900 w-24 text-right tabular-nums">{formatCurrency(t.val!, currency)}</span>
-              </div>
-            </summary>
-            <div className="px-6 pb-6 pt-2 text-slate-500 border-t border-slate-50 ml-16 mr-6">
-              {t.desc}
+              <div className="text-sm text-slate-500 font-medium">({formatPercentage(((val as number) / simulation.grossSalary) * 100)})</div>
             </div>
-          </details>
+            <div className="text-right">
+              <div className="text-xl font-black text-slate-900 tabular-nums">-{formatCurrency(val as number, currency)}</div>
+              <div className="text-xs font-semibold text-slate-400 mt-1 uppercase tracking-wider">Per Year</div>
+            </div>
+          </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 }
 
-// Section 6: Cost of Living Analysis
 export function CostOfLivingAnalysis({ simulation, countryId, cityMultiplier, cityName }: { simulation: CalculationResult, countryId: string, cityMultiplier: number, cityName: string }) {
   const currency = countryId === 'usa' ? 'USD' : countryId === 'uk' ? 'GBP' : 'EUR';
-  const total = simulation.itemizedMonthlyLivingCosts || 0;
-  
-  // Fake breakdown based on standard ratios for visual fidelity
-  const breakdown = [
-    { cat: 'Housing & Utilities', pct: 0.45, icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-    { cat: 'Food & Groceries', pct: 0.20, icon: 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z' },
-    { cat: 'Transportation', pct: 0.15, icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4' },
-    { cat: 'Healthcare & Personal', pct: 0.10, icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
-    { cat: 'Entertainment & Misc', pct: 0.10, icon: 'M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' }
-  ];
-
-  const diff = ((cityMultiplier - 1.0) * 100).toFixed(0);
-  const comparisonText = cityMultiplier > 1.0 
-    ? `${cityName} is ${diff}% more expensive than the national average.`
-    : cityMultiplier < 1.0 
-      ? `${cityName} is ${Math.abs(Number(diff))}% cheaper than the national average.`
-      : `${cityName} costs align with the national average.`;
-
+  const multiplierText = cityMultiplier > 1 
+    ? `+${((cityMultiplier - 1) * 100).toFixed(0)}% above national avg` 
+    : `${((1 - cityMultiplier) * 100).toFixed(0)}% below national avg`;
+    
   return (
-    <section className="py-12 border-b border-slate-100">
-      <h2 className="text-3xl font-bold text-slate-900 mb-4">Cost of Living Analysis</h2>
-      <p className="text-slate-500 mb-8 font-medium">{comparisonText}</p>
+    <div className="bg-white p-8 lg:p-12 rounded-[40px] border border-slate-200 shadow-sm space-y-10">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 mb-2">Cost of Living in {cityName}</h2>
+          <p className="text-slate-500 font-medium">Estimated monthly expenses for a mid-range lifestyle.</p>
+        </div>
+        <div className="bg-slate-100 text-slate-600 font-bold text-sm px-4 py-2 rounded-xl whitespace-nowrap">
+          {multiplierText}
+        </div>
+      </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        {breakdown.map((b, i) => (
-          <div key={i} className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-            <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-600 mb-3">
-               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={b.icon}></path></svg>
-            </div>
-            <div className="text-xl font-bold text-slate-900 mb-1">{formatCurrency(total * b.pct, currency)}</div>
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{b.cat}</div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100">
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-500 shadow-sm mb-4">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
           </div>
-        ))}
+          <div className="text-sm font-bold text-slate-500 mb-1">Housing & Rent</div>
+          <div className="text-2xl font-black text-slate-900 tabular-nums">{formatCurrency((simulation.itemizedMonthlyLivingCosts || 0) * 0.45, currency)}</div>
+        </div>
+        
+        <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100">
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-500 shadow-sm mb-4">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          </div>
+          <div className="text-sm font-bold text-slate-500 mb-1">Groceries & Food</div>
+          <div className="text-2xl font-black text-slate-900 tabular-nums">{formatCurrency((simulation.itemizedMonthlyLivingCosts || 0) * 0.25, currency)}</div>
+        </div>
+
+        <div className="p-6 rounded-3xl bg-slate-50 border border-slate-100">
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-slate-500 shadow-sm mb-4">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path></svg>
+          </div>
+          <div className="text-sm font-bold text-slate-500 mb-1">Transportation</div>
+          <div className="text-2xl font-black text-slate-900 tabular-nums">{formatCurrency((simulation.itemizedMonthlyLivingCosts || 0) * 0.15, currency)}</div>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
 
-// Section 11: FAQ Section
 export function FaqSection({ countryId }: { countryId: string }) {
-  const faqs = countryId === 'germany' ? [
-    { q: 'How much tax do I pay in Germany?', a: 'Germany uses a progressive tax system ranging from 14% to 42% for most earners, plus a 5.5% solidarity surcharge on the tax amount for higher earners. You also pay statutory social contributions (pension, health, unemployment, care) capped at specific income thresholds.' },
-    { q: 'What is the German Solidarity Surcharge?', a: 'The Solidaritätszuschlag is a 5.5% surcharge on your income tax, originally introduced to finance the reunification of Germany. It now only applies to higher income earners.' }
-  ] : countryId === 'uk' ? [
-    { q: 'How does the UK Personal Allowance work?', a: 'Most individuals receive a tax-free Personal Allowance (£12,570 for 2026). However, this allowance is reduced by £1 for every £2 earned above £100,000, meaning it disappears entirely at £125,140.' },
-    { q: 'What is National Insurance?', a: 'National Insurance (NI) is a tax on earnings paid by employees and employers to fund state benefits, including the State Pension. It is calculated weekly or monthly based on income bands.' }
-  ] : [
-    { q: 'How are US Federal brackets applied?', a: 'The US uses a marginal tax bracket system. You only pay the higher rate on the portion of your income that falls into that specific bracket, not your entire income.' },
-    { q: 'What is FICA tax?', a: 'FICA consists of Social Security (6.2% up to a wage base limit) and Medicare (1.45% on all earnings, plus an additional 0.9% for high earners).' }
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  
+  const faqs = [
+    { q: "How accurate is this tax calculation?", a: "Extremely accurate. We use the latest 2026 progressive tax brackets, social security limits, and state/local parameters for your jurisdiction." },
+    { q: "What does the living cost include?", a: "Our proprietary algorithm aggregates housing (1-bed city center apartment), groceries, transportation, utilities, and minor entertainment costs multiplied by the specific city's index." },
+    { q: "How is the Financial Health Score calculated?", a: "It is a weighted score (0-100) based on your Savings Rate (40%), Emergency Runway (40%), and Income-to-Rent ratio (20%)." }
   ];
 
   return (
-    <section className="py-12 border-b border-slate-100">
-      <h2 className="text-3xl font-bold text-slate-900 mb-8">Frequently Asked Questions</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {faqs.map((faq, i) => (
-          <div key={i} className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-            <h3 className="text-lg font-bold text-slate-900 mb-3">{faq.q}</h3>
-            <p className="text-slate-500 leading-relaxed">{faq.a}</p>
-          </div>
-        ))}
+    <section className="bg-slate-50 rounded-[40px] p-8 lg:p-16 border border-slate-100">
+      <div className="max-w-3xl mx-auto space-y-10">
+        <h2 className="text-3xl font-extrabold text-slate-900 text-center tracking-tight">Frequently Asked Questions</h2>
+        <div className="space-y-4">
+          {faqs.map((faq, idx) => (
+            <div key={idx} className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm transition-all">
+              <button 
+                onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
+                className="w-full px-6 py-5 text-left flex justify-between items-center bg-white hover:bg-slate-50 transition-colors focus:outline-none"
+              >
+                <span className="font-bold text-slate-900">{faq.q}</span>
+                <span className={`transform transition-transform ${openIndex === idx ? 'rotate-180' : ''}`}>
+                  <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                </span>
+              </button>
+              {openIndex === idx && (
+                <div className="px-6 pb-6 text-slate-600 font-medium leading-relaxed">
+                  {faq.a}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
 
-// Section 12: Related Calculators
 export function RelatedCalculators() {
-  const links = [
-    'Salary After Tax in USA', 'Salary After Tax in UK', 'Salary After Tax in Germany',
-    'Can I Live on $60k in Austin?', 'Can I Live on £80k in London?', 'Can I Live on €90k in Munich?'
-  ];
   return (
-    <section className="py-12 border-b border-slate-100">
-      <h2 className="text-3xl font-bold text-slate-900 mb-8">Related Tax Calculators</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {links.map((link, i) => (
-          <a key={i} href="#" className="p-4 bg-slate-50 hover:bg-white border border-slate-100 rounded-xl text-sm font-semibold text-slate-700 hover:text-teal-600 hover:shadow-sm transition-all flex justify-between items-center">
+    <section className="space-y-8">
+      <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Explore More Scenarios</h2>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          "Salary After Tax in USA",
+          "Salary After Tax in UK",
+          "Living in London on £80k",
+          "Living in Berlin on €60k"
+        ].map((link, idx) => (
+          <a key={idx} href="#" className="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-teal-500 hover:shadow-md transition-all text-sm font-bold text-slate-700 text-center">
             {link}
-            <svg className="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
           </a>
         ))}
       </div>
